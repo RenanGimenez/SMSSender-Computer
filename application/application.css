@@ -1,0 +1,65 @@
+/* JavaFX CSS - Leave this comment until you have at least create one rule which uses -fx-Property */
+.button {
+	-fx-font-family: "Arial Rounded MT Bold";
+	-fx-font-size: 26px;
+}
+
+#label-contacts {
+	-fx-font-family: "Arial Rounded MT Bold";
+	-fx-font-size: 26px;
+	-fx-pref-height: 75px;
+	-fx-pref-width: 180px;
+	-fx-min-width: -fx-pref-width;
+	-fx-min-height: -fx-pref-height;
+	-fx-max-width: -fx-pref-width;
+	-fx-max-height: -fx-pref-height;
+	-fx-alignment: center;
+}
+
+.contact {
+	-fx-pref-height: 75px;
+	-fx-pref-width: 180px;
+	-fx-min-width: -fx-pref-width;
+	-fx-min-height: -fx-pref-height;
+	-fx-max-width: -fx-pref-width;
+	-fx-max-height: -fx-pref-height;
+}
+
+.message {
+	-fx-font-family: "Arial Rounded MT Bold";
+	-fx-font-size: 26px;
+	-fx-border-color: black;
+	-fx-pref-height: 50px;
+	-fx-pref-width: 500px;
+	-fx-min-width: -fx-pref-width;
+	-fx-min-height: -fx-pref-height;
+	-fx-max-width: -fx-pref-width;
+	-fx-max-height: -fx-pref-height;
+	-fx-border-width: 2;
+	-fx-border-radius: 15;
+	-fx-background-radius: 15;
+
+	
+}
+
+.message.recieved {
+	-fx-background-color: rgb(255, 255, 255);
+	-fx-alignment: left;
+}
+
+.message.sent {
+	-fx-background-color: rgb(75, 159, 255);
+	-fx-alignment: right;
+}
+
+.hbox {
+}
+
+.hbox.recieved {
+	-fx-alignment: center_left;
+
+}
+
+.hbox.sent{
+	-fx-alignment: center_right;
+}
