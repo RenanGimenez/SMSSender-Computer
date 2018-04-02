@@ -30,18 +30,17 @@
 .message {
 	-fx-font-family: "Arial Rounded MT Bold";
 	-fx-font-size: 26px;
-	/*-fx-pref-height: 150px;*/
 	-fx-pref-width: 500px;
 	-fx-min-width: -fx-pref-width;
-	-fx-min-height: -fx-pref-height;
-	-fx-max-width: -fx-pref-width;
-	-fx-max-height: -fx-pref-height;
 	-fx-background-color: rgba(0, 0, 0, 0);
 	-fx-wrap-text: true;
-	/*-fx-border-color: black;
+	-fx-border-color: black;
+	-fx-alignment: right;
 	-fx-border-width: 3;
 	-fx-border-radius: 15;
-	-fx-background-radius: 20;*/
+	-fx-background-radius: 20;
+	
+	
 	
 }
 
@@ -52,16 +51,11 @@
 
 .message.sent {
 
-	/*-fx-background-color: rgb(75, 159, 255);*/
+	-fx-background-color: rgb(75, 159, 255);
 	-fx-alignment: baseline-right;
 }
 .message .content {
-	-fx-border-color: black;
-	-fx-alignment: right;
-	-fx-border-width: 3;
-	-fx-border-radius: 15;
-	-fx-background-radius: 20;
-	-fx-background-color: rgb(75, 159, 255);
+	
 }
 .hbox {
 }
@@ -74,3 +68,4 @@
 .hbox.sent{
 	-fx-alignment: center_right;
 }
+
