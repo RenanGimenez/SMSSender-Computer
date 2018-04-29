@@ -2,29 +2,22 @@ package model;
 
 import java.util.LinkedList;
 
-import javafx.scene.control.Button;
-import javafx.scene.control.ScrollPane;
-
 
 public class Contact {
 	private static final String NAME_USER = "USER";
 	private String name;
-	private String numTel;
+	private String telNum;
 	private LinkedList<Message> messages;
-	private Button contactButton;
-	private ScrollPane contactChat;
 	
-	public Contact(String name, String numTel, LinkedList<Message> messages) {
+	public Contact(String name, String telNum, LinkedList<Message> messages) {
 		this.name = name;
-		this.numTel = numTel;
+		this.telNum = telNum;
 		this.messages = messages;
-		this.contactButton = null;
-		this.contactChat = null;
 	}
 
-	public Contact(String name, String numTel) {
+	public Contact(String name, String telNum) {
         this.name = name;
-        this.numTel = numTel;
+        this.telNum = telNum;
         this.messages = new LinkedList<>();
     }
 	
@@ -33,7 +26,7 @@ public class Contact {
 	}
 
 	public String getNumTel() {
-		return numTel;
+		return telNum;
 	}
 
 	public LinkedList<Message> getMessages() {
@@ -48,20 +41,8 @@ public class Contact {
 		return name.equals(NAME_USER);
 	}
 
-	public Button getContactButton() {
-		return contactButton;
+	@Override
+	public String toString() {
+		return "name: "+name+" telNum: "+telNum; 
 	}
-
-	public void setContactButton(Button contactButton) {
-		this.contactButton = contactButton;
-	}
-
-	public ScrollPane getContactChat() {
-		return contactChat;
-	}
-
-	public void setContactChat(ScrollPane contactChat) {
-		this.contactChat = contactChat;
-	}
-
 }

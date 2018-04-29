@@ -15,17 +15,20 @@ import model.Contact;
 
 public class Reader implements Runnable {
 
-	
-//	private ObjectInputStream objectIn;
+
+	private ObjectInputStream objectIn;
 	private BufferedReader stringIn;
 
-	public Reader(InputStream in) {
-		//this.objectIn = new ObjectInputStream(in);
+	public Reader(InputStream in) throws IOException {
+
+		this.objectIn = new ObjectInputStream(in);
+
 		this.stringIn = new BufferedReader(new InputStreamReader(in));
 	}
 	@Override
 	public void run() {
 		try {
+			Thread.currentThread().setName("Reader");
 			while(true) {
 				String command = stringIn.readLine();
 				System.out.println(command);
@@ -34,14 +37,10 @@ public class Reader implements Runnable {
 					display();
 					break;
 				case "CONTACT_LIST":
-					try{
-						importContactList();
-					} catch(Exception e) {
-						e.printStackTrace();
-					}
+					importContactList();
 					break;
 				default:
-					System.out.println("error");
+					//System.out.println("error");
 				}
 			}
 		} catch (Exception e) {
@@ -57,22 +56,25 @@ public class Reader implements Runnable {
 		}
 
 	}
+	
 	private void importContactList() throws IOException {
-		ObjectInputStream objectIn = new ObjectInputStream(Server.getInputStream());
-		LinkedList<Contact> contactList;
-		try {
-			contactList = (LinkedList<Contact>) objectIn.readObject();
+		LinkedList<Contact> contactList = new LinkedList<Contact>();
 		
-		} catch (ClassNotFoundException | IOException e) {
-			contactList = new LinkedList<Contact>();
-			e.printStackTrace();
+		int contactListSize = Integer.parseInt(stringIn.readLine());
+		String name, telNum;
+		
+		while(contactList.size() != contactListSize) {
+			name = stringIn.readLine();
+			telNum = stringIn.readLine();
+			contactList.add(new Contact(name, telNum));
 		}
-		System.out.println(contactList);
-		Server.setContactList(contactList);
 		
+		System.out.println("contactList : "+contactList);
+		Server.setContactList(contactList);
+
 	}
 	private void display() throws IOException {
-	/*	String messageFrom = stringIn.readLine();
+		/*	String messageFrom = stringIn.readLine();
 		String messageContent = stringIn.readLine();
 		HomeWindow.newMessageIncoming(messageFrom, messageContent);
 		if(!HomeWindow.isActive()){
@@ -91,12 +93,12 @@ public class Reader implements Runnable {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				
+
 			}
 		}*/
-		
+
 	}
-	
+
 	public class NewMessageIncomingAction implements ActionListener {
 
 		private String messageFrom;
@@ -114,8 +116,8 @@ public class Reader implements Runnable {
 			//      *
 			//		*
 			// END BDD PART
-			
-		//	MainWindow.displayIncomingMessage(messageFrom,messageContent);
+
+			//	MainWindow.displayIncomingMessage(messageFrom,messageContent);
 
 		}
 

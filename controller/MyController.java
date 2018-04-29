@@ -51,7 +51,9 @@ public class MyController implements Initializable {
 
 	@FXML
 	public void send(ActionEvent event) throws InterruptedException {
+		
 		ScrollPane activeScrollPane = ContactsManager.getInstance().getActiveScrollPane();
+		Server.sendMessage(activeScrollPane.getId(), textToSend.getText());
 		VBox messagesVBox = ((VBox) activeScrollPane.getContent());
 		messagesVBox.getChildren().add(MessagesManager.getInstance().getMessageView(textToSend.getText()));
 		textToSend.setText("");
@@ -71,6 +73,7 @@ public class MyController implements Initializable {
 		ContactsManager manager = ContactsManager.getInstance();
 
 		ScrollPane activeScrollPane = manager.getActiveScrollPane();
+		
 		try {
 			manager.setActiveScrollPane((Button) event.getSource());
 			Main.getApplication().getRoot().setCenter(manager.getActiveScrollPane());
@@ -78,7 +81,7 @@ public class MyController implements Initializable {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
+		
 	}
 
 	@FXML

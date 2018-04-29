@@ -39,7 +39,7 @@ public class ContactsManager {
 				contactButton.setText(this.contacts.get(i).getName());
 				
 				ScrollPane scrollPane = (ScrollPane) FXMLLoader.load(getClass().getResource("../view/ChatScrollPane.fxml"));
-				scrollPane.setId(contactButton.getText());
+				scrollPane.setId(this.contacts.get(i).getNumTel());
 				if(i==0) 
 					activeScrollPane = scrollPane;
 				viewMap.put(contactButton, scrollPane);
@@ -54,11 +54,15 @@ public class ContactsManager {
 	}
 
 	public void getContactsFromPhone() {
-		//Server.getContacts();
-		for(int i = 0; i < 20; ++i) {
-			contacts.add(new Contact("Contact "+(i+1), "0600000000"));
+		
+		LinkedList<Contact> contactList = Server.getContactList();
+		for(int i = 0; i < contactList.size(); ++i) {
+			contacts.add(new Contact(contactList.get(i).getName(), contactList.get(i).getNumTel()));
 		}
 		
+	}
+	public LinkedList<Contact> getContactList(){
+		return contacts;
 	}
 	public List<Node> getContacts() {
 		Set keySet = viewMap.keySet();
@@ -89,5 +93,14 @@ public class ContactsManager {
 		activeScrollPane.setVisible(true);
 		System.out.println("fin:      "+activeScrollPane);
 		
+	}
+
+	public Contact getContact(String numTel) {
+		for (Contact c : contacts) {
+			if(c.getNumTel().equals(numTel)) {
+				return c;
+			}
+		}
+		return null;
 	}
 }

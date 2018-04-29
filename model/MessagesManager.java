@@ -1,6 +1,7 @@
 package model;
 
 import java.io.IOException;
+import java.util.LinkedList;
 
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
@@ -41,4 +42,6 @@ public class MessagesManager {
 			instance = new MessagesManager();
 		return instance;
 	}
+
+	
 }
