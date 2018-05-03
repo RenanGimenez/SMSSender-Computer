@@ -35,6 +35,7 @@ public class Main extends Application {
 		
 			scene = new Scene(root,731,434);
 			scene.getStylesheets().add(getClass().getResource("../view/application.css").toExternalForm());
+			
 			primaryStage.setScene(scene);
 			primaryStage.setResizable(false);
 			primaryStage.show();
@@ -48,6 +49,7 @@ public class Main extends Application {
 
 	public static void main(String[] args) {
 		launch(args);
+		
 	}
 
 	public static Main getApplication() {

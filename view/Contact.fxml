@@ -6,7 +6,7 @@
 
 <AnchorPane prefHeight="75.0" prefWidth="210.0" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MyController">
    <children>
-      <Button minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#showChatForContact" prefHeight="75.0" prefWidth="180.0" style="-fx-background-color: white; -fx-border-width: 2; -fx-border-color: black;" text="Button" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <Button minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#showChatForContact" prefHeight="75.0" prefWidth="180.0" styleClass="contact" text="Button" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <font>
             <Font name="Arial Rounded MT Bold" size="26.0" />
          </font>

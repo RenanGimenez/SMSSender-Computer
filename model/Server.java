@@ -4,6 +4,7 @@ import java.io.*;
 import java.net.*;
 import java.util.LinkedList;
 
+import javafx.scene.control.Button;
 import model.Contact;
 
 public class Server {
@@ -12,7 +13,7 @@ public class Server {
 	private static InputStream in;
 	private static PrintWriter out;
 	private static LinkedList<Contact> contactList;
-	
+
 	static {
 		contactList = new LinkedList<Contact>();
 	}
@@ -40,7 +41,7 @@ public class Server {
 	public static InputStream getInputStream() throws IOException {
 		return socket.getInputStream();
 	}
-	
+
 
 	public static LinkedList<Contact> getContactList() {
 		synchronized (contactList){
@@ -52,9 +53,36 @@ public class Server {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-			return contactList;
+			return sortByName(contactList);
 		}
 
+
+	}
+
+	private static LinkedList<Contact> sortByName(LinkedList<Contact> contactList) {
+		for(int i=0;i<contactList.size();i++) {
+			Contact temp = (Contact)contactList.get(i);
+			int left=0;
+			int right=i-1;
+			int mid=0;
+			while(left<=right) {
+				mid=(left+right)/2;
+				if(temp.getName().compareTo(contactList.get(mid).getName()) < 0)	{
+					right=mid-1;
+				}
+				else {
+					left=mid+1;
+				}
+			}
+
+			for(int j=i-1;j>=left;j--) {
+				contactList.set(j+1, contactList.get(j));
+			}
+			if(left!=i) {
+				contactList.set(left,temp);
+			}
+		}
+		return contactList;
 
 	}
 
@@ -79,13 +107,13 @@ public class Server {
 	}
 
 	public static void sendMessage(String numTel, String message) {
-		 out.println("SEND");
-		 out.println(numTel);
-		 out.println(message);
-		 out.println("END_OF_MESSAGE");
-		 out.flush();
+		out.println("SEND");
+		out.println(numTel);
+		out.println(message);
+		out.println("END_OF_MESSAGE");
+		out.flush();
 		System.out.println("Sent to "+numTel + ": "+message);
-		
+
 	}
 
 }

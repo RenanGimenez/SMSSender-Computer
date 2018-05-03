@@ -27,11 +27,7 @@
    <left>
       <ScrollPane fitToHeight="true" fitToWidth="true" minWidth="200.0" BorderPane.alignment="CENTER">
          <content>
-            <VBox fx:id="VBoxContacts">
-               <children>
-                  <Label id="label-contacts" prefHeight="103.0" prefWidth="207.0" text="My contacts" />
-               </children>
-            </VBox>
+            <VBox fx:id="VBoxContacts" />
          </content>
       </ScrollPane>
    </left>
@@ -53,4 +49,12 @@
          </content>
       </ScrollPane>
    </center>
+   <top>
+      <AnchorPane prefHeight="0.0" prefWidth="939.0" BorderPane.alignment="CENTER">
+         <children>
+            <Label id="label-contacts" prefHeight="103.0" prefWidth="207.0" text="My contacts:" AnchorPane.leftAnchor="0.0" />
+            <Label id="talkingTo" fx:id="talkingTo" layoutX="422.0" maxWidth="740.0" minHeight="65.0" prefHeight="65.0" prefWidth="740.0" text="Contact" textAlignment="CENTER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="200.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+         </children>
+      </AnchorPane>
+   </top>
 </BorderPane>

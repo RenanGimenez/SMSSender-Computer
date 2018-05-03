@@ -4,7 +4,7 @@
 	-fx-font-size: 26px;
 }
 
-#label-contacts {
+.label{
 	-fx-font-family: "Arial Rounded MT Bold";
 	-fx-font-size: 26px;
 	-fx-pref-height: 75px;
@@ -17,12 +17,19 @@
 }
 
 .contact {
+	-fx-background-color: white;
+	-fx-border-width: 2;
+	-fx-border-color: black;
 	-fx-pref-height: 75px;
 	-fx-pref-width: 180px;
 	-fx-min-width: -fx-pref-width;
 	-fx-min-height: -fx-pref-height;
 	-fx-max-width: -fx-pref-width;
 	-fx-max-height: -fx-pref-height;
+}
+
+.contact.newMessage {
+	-fx-background-color: yellow;
 }
 #textToSend {
  	-fx-wrap-text: true;
@@ -44,7 +51,7 @@
 	
 }
 
-.message.recieved {
+.message.received {
 	-fx-background-color: rgb(255, 255, 255);
 	-fx-alignment: baseline-left;
 }
@@ -60,7 +67,7 @@
 .hbox {
 }
 
-.hbox.recieved {
+.hbox.received {
 	-fx-alignment: center_left;
 
 }

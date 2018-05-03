@@ -11,6 +11,8 @@ import java.awt.event.ActionListener;
 import java.io.*;
 import java.util.LinkedList;
 
+import controller.MyController;
+import javafx.application.Platform;
 import model.Contact;
 
 public class Reader implements Runnable {
@@ -74,9 +76,20 @@ public class Reader implements Runnable {
 
 	}
 	private void display() throws IOException {
-		/*	String messageFrom = stringIn.readLine();
-		String messageContent = stringIn.readLine();
-		HomeWindow.newMessageIncoming(messageFrom, messageContent);
+		final String messageFrom = stringIn.readLine();
+		String line, messageContentBuilder = "";
+		while(!(line = stringIn.readLine()).equals("END_OF_DISPLAY")) {
+			messageContentBuilder += line +"\n";
+		}
+		final String messageContent = messageContentBuilder.substring(0, messageContentBuilder.length() - 1);
+		
+		Platform.runLater(
+				  () -> {
+					  new MyController().displayMessage(messageFrom, messageContent);
+				  }
+				);
+		
+	/*	HomeWindow.newMessageIncoming(messageFrom, messageContent);
 		if(!HomeWindow.isActive()){
 			//Windows notification
 			if(SystemTray.isSupported()) {

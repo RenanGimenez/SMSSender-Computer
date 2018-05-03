@@ -17,17 +17,17 @@ public class MessagesManager {
 		
 	}
 	
-	public HBox getMessageView(String text){
+	public HBox getMessageView(String text, String sentOrReceived){
 		try {
 			HBox messageBox = (HBox) FXMLLoader.load(getClass().getResource("../view/Message.fxml"));
 			TextFlow messageTextFlow = (TextFlow) messageBox.getChildren().get(0);
 			messageTextFlow.getChildren().add(new Text(text));
 			messageTextFlow.getStyleClass().clear();
 			messageTextFlow.getStyleClass().add("message");
-			messageTextFlow.getStyleClass().add("sent");
+			messageTextFlow.getStyleClass().add(sentOrReceived);
 			messageBox.getStyleClass().clear();
 			messageBox.getStyleClass().add("hbox");
-			messageBox.getStyleClass().add("sent");
+			messageBox.getStyleClass().add(sentOrReceived);
 			HBox.setMargin(messageTextFlow, new Insets(12.5,0.0,12.5,0.0));
 			return messageBox;
 		} catch (IOException e) {
