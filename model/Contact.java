@@ -11,7 +11,10 @@ public class Contact {
 	
 	public Contact(String name, String telNum, LinkedList<Message> messages) {
 		this.name = name;
-		this.telNum = telNum;
+		if(telNum.startsWith("+33"))
+			this.telNum = telNum;
+		else
+			this.telNum = "+33" + telNum.substring(1);
 		this.messages = messages;
 	}
 
@@ -44,5 +47,10 @@ public class Contact {
 	@Override
 	public String toString() {
 		return "name: "+name+" telNum: "+telNum; 
+	}
+
+	public void setMessageList(LinkedList<Message> messageList) {
+		this.messages = messageList;
+		
 	}
 }

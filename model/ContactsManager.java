@@ -36,12 +36,22 @@ public class ContactsManager {
 	private void generateViews() {
 		for(int i = 0; i < contacts.size(); ++i) {
 			try {
+				Contact contact = contacts.get(i);
 				AnchorPane contactPane = (AnchorPane) FXMLLoader.load(getClass().getResource("../view/Contact.fxml"));
 				Button contactButton = (Button) contactPane.getChildren().get(0);
-				contactButton.setText(this.contacts.get(i).getName());
-				contactButton.setId(contacts.get(i).getNumTel());
+				contactButton.setText(contact.getName());
+				contactButton.setId(contact.getNumTel());
 				ScrollPane scrollPane = (ScrollPane) FXMLLoader.load(getClass().getResource("../view/ChatScrollPane.fxml"));
-				scrollPane.setId(this.contacts.get(i).getNumTel());
+				scrollPane.setId(contact.getNumTel());
+				for(int j=0; j < contact.getMessages().size(); ++j) {
+					Message message = contact.getMessages().get(j);
+					VBox messagesVBox = ((VBox) scrollPane.getContent());
+					if(message.getSender().equals("USER"))
+						messagesVBox.getChildren().add(MessagesManager.getInstance().getMessageView(message.getContent(),"sent"));
+					else
+						messagesVBox.getChildren().add(MessagesManager.getInstance().getMessageView(message.getContent(),"received"));
+					scrollPane.vvalueProperty().bind(messagesVBox.heightProperty());
+				}
 				if(i==0) 
 					activeScrollPane = scrollPane;
 				viewMap.put(contactButton, scrollPane);
@@ -61,10 +71,10 @@ public class ContactsManager {
 	
 	/* asks the server for the contactlist then fill its own contactList*/
 	public void getContactsFromPhone() {
-
-		LinkedList<Contact> contactList = Server.getContactList();
-		for(int i = 0; i < contactList.size(); ++i) {
-			contacts.add(new Contact(contactList.get(i).getName(), contactList.get(i).getNumTel()));
+		MessagesManager messagesManager = MessagesManager.getInstance();
+		contacts = Server.getContactList();
+		for (int i=0; i<contacts.size(); ++i) {
+			contacts.get(i).setMessageList(messagesManager.getMessagesOf(contacts.get(i)));
 		}
 
 	}

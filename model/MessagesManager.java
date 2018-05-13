@@ -12,9 +12,9 @@ import javafx.scene.text.TextFlow;
 public class MessagesManager {
 
 	public static MessagesManager instance;
-	
+	private LinkedList<Message> messageList;
 	private MessagesManager() {
-		
+		getMessagesFromPhone();
 	}
 	
 	public HBox getMessageView(String text, String sentOrReceived){
@@ -42,6 +42,27 @@ public class MessagesManager {
 			instance = new MessagesManager();
 		return instance;
 	}
+	
+	public void getMessagesFromPhone() {
+		messageList = Server.getMessageList();	
+	}
 
+	public LinkedList<Message> getMessageList() {
+		return messageList;
+		
+	}
+
+	public LinkedList<Message> getMessagesOf(Contact contact) {
+		LinkedList<Message> messagesOfContact = new LinkedList<Message>();
+		
+		for(Message m : messageList) {
+			if(contact.getNumTel().equals(m.getSender()) || contact.getNumTel().equals(m.getReceiver())) {
+				messagesOfContact.add(m);
+			}
+		}
+		return messagesOfContact;
+		// TODO Auto-generated method stub
+		
+	}
 	
 }

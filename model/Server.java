@@ -13,9 +13,11 @@ public class Server {
 	private static InputStream in;
 	private static PrintWriter out;
 	private static LinkedList<Contact> contactList;
+	private static LinkedList<Message> messageList;
 
 	static {
 		contactList = new LinkedList<Contact>();
+		messageList = new LinkedList<Message>();
 	}
 
 	public static void connectToPhone(String code) throws Exception {
@@ -85,6 +87,33 @@ public class Server {
 		return contactList;
 
 	}
+	
+	private static LinkedList<Message> sortByDate(LinkedList<Message> messageList) {
+		for(int i=0;i<messageList.size();i++) {
+			Message temp = (Message)messageList.get(i);
+			int left=0;
+			int right=i-1;
+			int mid=0;
+			while(left<=right) {
+				mid=(left+right)/2;
+				if(temp.getDate() < messageList.get(mid).getDate())	{
+					right=mid-1;
+				}
+				else {
+					left=mid+1;
+				}
+			}
+
+			for(int j=i-1;j>=left;j--) {
+				messageList.set(j+1, messageList.get(j));
+			}
+			if(left!=i) {
+				messageList.set(left,temp);
+			}
+		}
+		return messageList;
+
+	}
 
 	public static void setContactList(LinkedList<Contact> contactList) {
 		synchronized (Server.contactList) {
@@ -92,7 +121,7 @@ public class Server {
 			Server.contactList.addAll(contactList);
 			Server.contactList.notify();
 		}
-		System.out.println(Thread.currentThread().getName() + "OK");
+		System.out.println(Thread.currentThread().getName() + " ContactList OK");
 	}
 
 	private static String codeToIP(String code) {
@@ -114,6 +143,31 @@ public class Server {
 		out.flush();
 		System.out.println("Sent to "+numTel + ": "+message);
 
+	}
+	
+	public static LinkedList<Message> getMessageList() {
+		synchronized (messageList){
+			while(messageList.isEmpty())
+				try {
+					System.out.println(Thread.currentThread().getName());
+					messageList.wait();
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			return sortByDate(messageList);
+		}
+
+
+	}
+
+	public static void setMessageList(LinkedList<Message> messageList) {
+		synchronized (Server.messageList) {
+			Server.messageList.removeAll(Server.messageList);
+			Server.messageList.addAll(messageList);
+			Server.messageList.notify();
+		}
+		System.out.println(Thread.currentThread().getName() + " MessageList OK");
 	}
 
 }
