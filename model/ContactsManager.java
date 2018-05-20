@@ -1,6 +1,7 @@
 package model;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -20,12 +21,12 @@ public class ContactsManager {
 	private static ContactsManager instance;
 	@FXML
 	private VBox VBoxContacts;
-	private LinkedList<Contact> contacts;
+	private ArrayList<Contact> contacts;
 	private HashMap<Button, ScrollPane> viewMap;
 	private ScrollPane activeScrollPane;
 
 	private ContactsManager() {
-		contacts = new LinkedList<Contact>();
+		contacts = new ArrayList<Contact>();
 		viewMap = new HashMap<Button,ScrollPane>();
 		activeScrollPane = null;
 		getContactsFromPhone();
@@ -43,6 +44,8 @@ public class ContactsManager {
 				contactButton.setId(contact.getNumTel());
 				ScrollPane scrollPane = (ScrollPane) FXMLLoader.load(getClass().getResource("../view/ChatScrollPane.fxml"));
 				scrollPane.setId(contact.getNumTel());
+				/*
+				// Display all messages
 				for(int j=0; j < contact.getMessages().size(); ++j) {
 					Message message = contact.getMessages().get(j);
 					VBox messagesVBox = ((VBox) scrollPane.getContent());
@@ -51,7 +54,8 @@ public class ContactsManager {
 					else
 						messagesVBox.getChildren().add(MessagesManager.getInstance().getMessageView(message.getContent(),"received"));
 					scrollPane.vvalueProperty().bind(messagesVBox.heightProperty());
-				}
+				// End
+				}*/
 				if(i==0) 
 					activeScrollPane = scrollPane;
 				viewMap.put(contactButton, scrollPane);
@@ -80,7 +84,7 @@ public class ContactsManager {
 	}
 	
 	/*returns the contactList under a linked list of contacts */
-	public LinkedList<Contact> getContactList(){
+	public ArrayList<Contact> getContactList(){
 		return contacts;
 	}
 	
@@ -159,6 +163,15 @@ public class ContactsManager {
 	public Contact getContact(String numTel) {
 		for (Contact c : contacts) {
 			if(c.getNumTel().equals(numTel)) {
+				return c;
+			}
+		}
+		return null;
+	}
+	
+	public Contact getContact(ScrollPane scrollPane) {
+		for (Contact c : contacts) {
+			if(c.getNumTel().equals(scrollPane.getId())) {
 				return c;
 			}
 		}

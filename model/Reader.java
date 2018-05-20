@@ -9,6 +9,7 @@ import java.awt.TrayIcon.MessageType;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 
@@ -64,8 +65,9 @@ public class Reader implements Runnable {
 	}
 	
 	private void importMessageList() throws NumberFormatException, IOException {
-		LinkedList<Message> messageList = new LinkedList<Message>();
+		
 		int messageListSize = Integer.parseInt(stringIn.readLine());
+		ArrayList<Message> messageList = new ArrayList<Message>(messageListSize);
 		System.out.println("messageListSize = "+messageListSize);
 		String sender, receiver, name, date, type;
 		StringBuilder content = new StringBuilder();
@@ -83,16 +85,15 @@ public class Reader implements Runnable {
 				content.deleteCharAt(content.length() - 1); //delete the last '\n'
 			
 			type = stringIn.readLine();
-			System.out.println("{ sender = "+sender+"\n receiver = "+receiver+"\n name = "+name+"\n date = "+date+"\n content = "+content.toString()+"\n type = "+type);
 			messageList.add(new Message(sender, receiver, name, Long.parseLong(date), content.toString(), type));
 		}
-		System.out.println("messages:" + messageList.toString());
 		Server.setMessageList(messageList);
 	}
 	private void importContactList() throws IOException {
-		LinkedList<Contact> contactList = new LinkedList<Contact>();
+		
 		
 		int contactListSize = Integer.parseInt(stringIn.readLine());
+		ArrayList<Contact> contactList = new ArrayList<Contact>(contactListSize);
 		String name, telNum;
 		
 		while(contactList.size() != contactListSize) {
@@ -101,7 +102,6 @@ public class Reader implements Runnable {
 			contactList.add(new Contact(name, telNum));
 		}
 		
-		System.out.println("contactList: "+contactList);
 		Server.setContactList(contactList);
 
 	}

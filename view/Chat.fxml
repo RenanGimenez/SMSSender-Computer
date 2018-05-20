@@ -20,7 +20,7 @@
                   <Font name="Arial Rounded MT Bold" size="24.0" />
                </font>
             </TextArea>
-            <Button layoutX="667.0" layoutY="15.0" mnemonicParsing="false" onAction="#send" prefHeight="87.0" prefWidth="113.0" text="Send" AnchorPane.bottomAnchor="15.0" AnchorPane.rightAnchor="159.0" AnchorPane.topAnchor="15.0" />
+            <Button layoutX="667.0" layoutY="16.0" mnemonicParsing="false" onAction="#send" prefHeight="87.0" prefWidth="113.0" text="Send" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="159.0" AnchorPane.topAnchor="16.0" />
          </children>
       </AnchorPane>
    </bottom>
@@ -36,7 +36,7 @@
          <content>
             <VBox fx:id="messagesVBox" alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0">
                <children>
-                  <Button id="displayOldMessages" mnemonicParsing="false" prefHeight="50.0" prefWidth="1920.0" text="Display old messages...">
+                  <Button id="displayOldMessages" mnemonicParsing="false" onAction="#displayOldMessages" prefHeight="50.0" prefWidth="1920.0" text="Display old messages...">
                      <font>
                         <Font size="26.0" />
                      </font>

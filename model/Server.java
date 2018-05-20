@@ -2,6 +2,7 @@ package model;
 
 import java.io.*;
 import java.net.*;
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 import javafx.scene.control.Button;
@@ -12,12 +13,12 @@ public class Server {
 	private static Socket socket;
 	private static InputStream in;
 	private static PrintWriter out;
-	private static LinkedList<Contact> contactList;
-	private static LinkedList<Message> messageList;
+	private static ArrayList<Contact> contactList;
+	private static ArrayList<Message> messageList;
 
 	static {
-		contactList = new LinkedList<Contact>();
-		messageList = new LinkedList<Message>();
+		contactList = new ArrayList<Contact>();
+		messageList = new ArrayList<Message>();
 	}
 
 	public static void connectToPhone(String code) throws Exception {
@@ -45,7 +46,7 @@ public class Server {
 	}
 
 
-	public static LinkedList<Contact> getContactList() {
+	public static ArrayList<Contact> getContactList() {
 		synchronized (contactList){
 			while(contactList.isEmpty())
 				try {
@@ -61,7 +62,7 @@ public class Server {
 
 	}
 
-	private static LinkedList<Contact> sortByName(LinkedList<Contact> contactList) {
+	private static ArrayList<Contact> sortByName(ArrayList<Contact> contactList) {
 		for(int i=0;i<contactList.size();i++) {
 			Contact temp = (Contact)contactList.get(i);
 			int left=0;
@@ -88,7 +89,7 @@ public class Server {
 
 	}
 	
-	private static LinkedList<Message> sortByDate(LinkedList<Message> messageList) {
+	private static ArrayList<Message> sortByDate(ArrayList<Message> messageList) {
 		for(int i=0;i<messageList.size();i++) {
 			Message temp = (Message)messageList.get(i);
 			int left=0;
@@ -115,7 +116,7 @@ public class Server {
 
 	}
 
-	public static void setContactList(LinkedList<Contact> contactList) {
+	public static void setContactList(ArrayList<Contact> contactList) {
 		synchronized (Server.contactList) {
 			Server.contactList.removeAll(Server.contactList);
 			Server.contactList.addAll(contactList);
@@ -145,7 +146,7 @@ public class Server {
 
 	}
 	
-	public static LinkedList<Message> getMessageList() {
+	public static ArrayList<Message> getMessageList() {
 		synchronized (messageList){
 			while(messageList.isEmpty())
 				try {
@@ -161,7 +162,7 @@ public class Server {
 
 	}
 
-	public static void setMessageList(LinkedList<Message> messageList) {
+	public static void setMessageList(ArrayList<Message> messageList) {
 		synchronized (Server.messageList) {
 			Server.messageList.removeAll(Server.messageList);
 			Server.messageList.addAll(messageList);

@@ -1,6 +1,7 @@
 package model;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 import javafx.fxml.FXMLLoader;
@@ -12,7 +13,7 @@ import javafx.scene.text.TextFlow;
 public class MessagesManager {
 
 	public static MessagesManager instance;
-	private LinkedList<Message> messageList;
+	private ArrayList<Message> messageList;
 	private MessagesManager() {
 		getMessagesFromPhone();
 	}
@@ -47,13 +48,13 @@ public class MessagesManager {
 		messageList = Server.getMessageList();	
 	}
 
-	public LinkedList<Message> getMessageList() {
+	public ArrayList<Message> getMessageList() {
 		return messageList;
 		
 	}
 
-	public LinkedList<Message> getMessagesOf(Contact contact) {
-		LinkedList<Message> messagesOfContact = new LinkedList<Message>();
+	public ArrayList<Message> getMessagesOf(Contact contact) {
+		ArrayList<Message> messagesOfContact = new ArrayList<Message>();
 		
 		for(Message m : messageList) {
 			if(contact.getNumTel().equals(m.getSender()) || contact.getNumTel().equals(m.getReceiver())) {

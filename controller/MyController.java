@@ -25,7 +25,9 @@ import java.awt.Color;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import main.Main;
+import model.Contact;
 import model.ContactsManager;
+import model.Message;
 import model.MessagesManager;
 import model.Server;
 import javafx.collections.ObservableList;
@@ -35,6 +37,7 @@ import java.io.IOException;
 import java.io.UTFDataFormatException;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -42,6 +45,7 @@ import javax.swing.border.LineBorder;
 
 public class MyController implements Initializable {
 
+	private static final int nbMessagesToDisplay = 100;
 	@FXML
 	private PasswordField passwordField;
 	@FXML
@@ -53,6 +57,7 @@ public class MyController implements Initializable {
 	private String TALKING_TO = "talkingTo";
 	@Override
 	public void initialize(URL url, ResourceBundle resourceBundle) {
+
 	}
 
 	@FXML
@@ -74,7 +79,7 @@ public class MyController implements Initializable {
 		VBox vBoxContacts = (VBox) ((ScrollPane)root.getLeft()).getContent();
 		vBoxContacts.getChildren().addAll(manager.getContacts());
 		manager.setVBoxContacts(vBoxContacts);
-		
+
 		AnchorPane top = (AnchorPane) ((Main) Main.getApplication()).getRoot().getTop();
 		ObservableList<Node> topChildren = top.getChildren();
 		for(Node child : topChildren) {
@@ -104,7 +109,7 @@ public class MyController implements Initializable {
 				if(child.getId().equals(TALKING_TO)) {
 					((Label) child).setText(manager.getContact(manager.getActiveScrollPane().getId()).getName());
 				}
-				
+
 			}
 			System.out.println(manager.getActiveScrollPane().getId());
 			((ScrollPane) ((Main) Main.getApplication()).getRoot().getLeft()).setVvalue(0);
@@ -127,8 +132,8 @@ public class MyController implements Initializable {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		
+
+
 	}
 	@FXML
 	public void connect(ActionEvent event) throws InterruptedException {
@@ -141,13 +146,41 @@ public class MyController implements Initializable {
 			displayContacts();
 			ContactsManager manager = ContactsManager.getInstance();
 			Main.getApplication().getRoot().setCenter(manager.getActiveScrollPane());
-			
+
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}	
 	}
-	
+	@FXML
+	public void displayOldMessages(ActionEvent event) throws InterruptedException{
+		System.out.println("Hi");
+		try {
+			ContactsManager contactsManager = ContactsManager.getInstance();
+			MessagesManager messagesManager = MessagesManager.getInstance();
+
+			VBox messagesVBox = ((VBox) contactsManager.getActiveScrollPane().getContent());
+			Contact contact = contactsManager.getContact(contactsManager.getActiveScrollPane());
+			ArrayList<Message> messages = contact.getOldMessages(contact.getNbOldMessages() - contact.getNbOldMessagesDisplayed() - nbMessagesToDisplay, //begin
+																contact.getNbOldMessages() - contact.getNbOldMessagesDisplayed()); //end
+			for(int i=0; i<messages.size();++i) {
+				if(messages.get(i).getSender().equals("USER"))
+					messagesVBox.getChildren().add(i+1,messagesManager.getMessageView(messages.get(i).getContent(),"sent"));
+				else
+					messagesVBox.getChildren().add(i+1,messagesManager.getMessageView(messages.get(i).getContent(),"received"));
+
+				// End
+			}
+			//	messagesManager.get
+
+			//messagesVBox.getChildren().add(MessagesManager.getInstance().getMessageView(messageContent,"received"));
+			System.out.println("Hi");
+
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}	
+	}
 
 	public void displayMessage(String messageFrom, String messageContent) {
 		Button senderButton = ContactsManager.getInstance().getButtonOf(messageFrom);
