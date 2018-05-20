@@ -3,6 +3,7 @@ package model;
 import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedList;
 
 import javafx.scene.control.Button;
@@ -136,13 +137,15 @@ public class Server {
 
 	}
 
-	public static void sendMessage(String numTel, String message) {
+	public static void sendMessage(String telNum, String message) {
+		long date = new Date().getTime();
 		out.println("SEND");
-		out.println(numTel);
+		out.println(telNum);
 		out.println(message);
 		out.println("END_OF_MESSAGE");
 		out.flush();
-		System.out.println("Sent to "+numTel + ": "+message);
+		Database.insert((new Message("USER",telNum,"",date,message,"")));
+		System.out.println("Sent to "+telNum + ": "+message);
 
 	}
 	
@@ -166,6 +169,7 @@ public class Server {
 		synchronized (Server.messageList) {
 			Server.messageList.removeAll(Server.messageList);
 			Server.messageList.addAll(messageList);
+			Server.messageList.addAll(Database.getMessages());
 			Server.messageList.notify();
 		}
 		System.out.println(Thread.currentThread().getName() + " MessageList OK");

@@ -45,7 +45,7 @@ import javax.swing.border.LineBorder;
 
 public class MyController implements Initializable {
 
-	private static final int nbMessagesToDisplay = 100;
+	private static final int nbMessagesToDisplay = 20;
 	@FXML
 	private PasswordField passwordField;
 	@FXML
