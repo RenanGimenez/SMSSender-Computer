@@ -9,6 +9,7 @@ import javafx.geometry.Insets;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
+import model.server.Server;
 
 public class MessagesManager {
 

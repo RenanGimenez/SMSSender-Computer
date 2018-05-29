@@ -16,6 +16,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
+import model.server.Server;
 
 public class ContactsManager {
 	private static ContactsManager instance;
@@ -33,7 +34,8 @@ public class ContactsManager {
 		generateViews();		
 	};
 
-	/* Generates the hashmap "viewMap" which contains binded Button and ScrollPane */
+	/* Generates the hashmap "viewMap" which contains binded Button and ScrollPane 
+	 * The id of each scrollpane and button is the phone number of the contact associated to it*/
 	private void generateViews() {
 		for(int i = 0; i < contacts.size(); ++i) {
 			try {
@@ -44,18 +46,7 @@ public class ContactsManager {
 				contactButton.setId(contact.getNumTel());
 				ScrollPane scrollPane = (ScrollPane) FXMLLoader.load(getClass().getResource("../view/ChatScrollPane.fxml"));
 				scrollPane.setId(contact.getNumTel());
-				/*
-				// Display all messages
-				for(int j=0; j < contact.getMessages().size(); ++j) {
-					Message message = contact.getMessages().get(j);
-					VBox messagesVBox = ((VBox) scrollPane.getContent());
-					if(message.getSender().equals("USER"))
-						messagesVBox.getChildren().add(MessagesManager.getInstance().getMessageView(message.getContent(),"sent"));
-					else
-						messagesVBox.getChildren().add(MessagesManager.getInstance().getMessageView(message.getContent(),"received"));
-					scrollPane.vvalueProperty().bind(messagesVBox.heightProperty());
-				// End
-				}*/
+				
 				if(i==0) 
 					activeScrollPane = scrollPane;
 				viewMap.put(contactButton, scrollPane);
@@ -193,4 +184,9 @@ public class ContactsManager {
 		}
 		return null;
 	}
+
+	public boolean isActiveContact(String messageFrom) {
+		return activeScrollPane.getId().equals(messageFrom);
+	}
+
 }

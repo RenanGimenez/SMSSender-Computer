@@ -22,7 +22,7 @@ public class Main extends Application {
 	@FXML
     private VBox VBoxContacts;
 	private Stage primaryStage;
-	private static Application application;
+	private static Main application;
 	
 	@Override
 	public void start(Stage primaryStage) {
@@ -53,12 +53,20 @@ public class Main extends Application {
 	}
 
 	public static Main getApplication() {
-		return (Main) application;
+		return application;
 	}
 
+	public static boolean isWindowMinimized() {
+		return application.primaryStage.isIconified();
+	}
+	
+	public static boolean isWindowFocused() {
+		return application.primaryStage.isFocused();
+	}
 
 	public BorderPane getRoot() {
 		return (BorderPane) root;
+	
 	}
 	public void openChat() {
 		try {
@@ -74,6 +82,14 @@ public class Main extends Application {
 		}
 	}
 
+
+
+	public static void setMinimizedWindow(boolean state) {
+		application.primaryStage.setIconified(state);
+		
+	}
+
+	
 	
 
 	

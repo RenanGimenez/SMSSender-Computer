@@ -7,6 +7,8 @@ import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
@@ -29,7 +31,7 @@ import model.Contact;
 import model.ContactsManager;
 import model.Message;
 import model.MessagesManager;
-import model.Server;
+import model.server.Server;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 
@@ -40,6 +42,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.swing.border.LineBorder;
 
@@ -93,33 +97,7 @@ public class MyController implements Initializable {
 
 	@FXML
 	public void showChatForContact(ActionEvent event) throws InterruptedException {
-		ContactsManager manager = ContactsManager.getInstance();
-		try {
-			manager.setActiveScrollPane((Button) event.getSource());			
-			Main.getApplication().getRoot().setCenter(manager.getActiveScrollPane());
-
-			ObservableList<String> styles = ((Button) event.getSource()).getStyleClass();
-			for (String style : styles) {
-				if(style.equals("newMessage"))
-					styles.remove(style);
-			}
-			AnchorPane top = (AnchorPane) ((Main) Main.getApplication()).getRoot().getTop();
-			ObservableList<Node> topChildren = top.getChildren();
-			for(Node child : topChildren) {
-				if(child.getId().equals(TALKING_TO)) {
-					((Label) child).setText(manager.getContact(manager.getActiveScrollPane().getId()).getName());
-				}
-
-			}
-			System.out.println(manager.getActiveScrollPane().getId());
-			((ScrollPane) ((Main) Main.getApplication()).getRoot().getLeft()).setVvalue(0);
-			//talkingTo.setText(((Button) event.getSource()).getText());
-
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
+		showChatForContact((Button) event.getSource());
 	}
 
 	@FXML
@@ -135,10 +113,13 @@ public class MyController implements Initializable {
 
 
 	}
+
 	@FXML
 	public void connect(ActionEvent event) throws InterruptedException {
 
 		try {
+			
+			
 			String code = passwordField.getText();
 			System.out.println(code);
 			Server.connectToPhone(code);
@@ -148,8 +129,11 @@ public class MyController implements Initializable {
 			Main.getApplication().getRoot().setCenter(manager.getActiveScrollPane());
 
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Alert alert = new Alert(AlertType.ERROR);
+			alert.setTitle("Connection failed");
+			alert.setHeaderText("Connection failed");
+			alert.setContentText("");
+			alert.showAndWait();
 		}	
 	}
 	@FXML
@@ -162,18 +146,14 @@ public class MyController implements Initializable {
 			VBox messagesVBox = ((VBox) contactsManager.getActiveScrollPane().getContent());
 			Contact contact = contactsManager.getContact(contactsManager.getActiveScrollPane());
 			ArrayList<Message> messages = contact.getOldMessages(contact.getNbOldMessages() - contact.getNbOldMessagesDisplayed() - nbMessagesToDisplay, //begin
-																contact.getNbOldMessages() - contact.getNbOldMessagesDisplayed()); //end
+					contact.getNbOldMessages() - contact.getNbOldMessagesDisplayed()); //end
 			for(int i=0; i<messages.size();++i) {
 				if(messages.get(i).getSender().equals("USER"))
 					messagesVBox.getChildren().add(i+1,messagesManager.getMessageView(messages.get(i).getContent(),"sent"));
 				else
-					messagesVBox.getChildren().add(i+1,messagesManager.getMessageView(messages.get(i).getContent(),"received"));
-
-				// End
+					messagesVBox.getChildren().add(i+1,messagesManager.getMessageView(messages.get(i).getContent(),"received"));		
 			}
-			//	messagesManager.get
-
-			//messagesVBox.getChildren().add(MessagesManager.getInstance().getMessageView(messageContent,"received"));
+			
 			System.out.println("Hi");
 
 		} catch (Exception e) {
@@ -190,12 +170,47 @@ public class MyController implements Initializable {
 		senderScrollPane.vvalueProperty().bind(messagesVBox.heightProperty());
 
 		ObservableList<String> styles = senderButton.getStyleClass();
-		for (String style : styles) {
-			if(style.equals("newMessage"))
-				styles.remove(style);
-		}
+		
+		//test if the style newMessage exists
+		for (int i = 0; i < styles.size(); ++i)
+			if(styles.get(i).equals("newMessage")) {
+				return;
+			}
+		
+		// the style newMessage does not exist
 		styles.add("newMessage");
 
+	}
+
+	public void showChatForContact(Button buttonOfContact) {
+		ContactsManager manager = ContactsManager.getInstance();
+		try {
+			manager.setActiveScrollPane(buttonOfContact);			
+			Main.getApplication().getRoot().setCenter(manager.getActiveScrollPane());
+
+			ObservableList<String> styles = (buttonOfContact).getStyleClass();
+
+			for (int i=0; i<styles.size();++i) {
+				if(styles.get(i).equals("newMessage")) {
+					styles.remove(i);
+					--i;
+				}
+			}
+
+			AnchorPane top = (AnchorPane) ((Main) Main.getApplication()).getRoot().getTop();
+			ObservableList<Node> topChildren = top.getChildren();
+			for(Node child : topChildren) {
+				if(child.getId().equals(TALKING_TO)) {
+					((Label) child).setText(manager.getContact(manager.getActiveScrollPane().getId()).getName());
+				}
+			}
+
+			((ScrollPane) ((Main) Main.getApplication()).getRoot().getLeft()).setVvalue(0);
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }

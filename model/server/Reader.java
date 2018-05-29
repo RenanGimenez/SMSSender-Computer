@@ -1,4 +1,4 @@
-package model;
+package model.server;
 
 import java.awt.AWTException;
 import java.awt.Image;
@@ -12,10 +12,20 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
+import java.util.Optional;
 
 import controller.MyController;
 import javafx.application.Platform;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
+import main.Main;
 import model.Contact;
+import model.ContactsManager;
+import model.Message;
+import model.database.Database;
+import tools.Sound;
+import tools.WindowsNotification;
 
 public class Reader implements Runnable {
 
@@ -32,6 +42,7 @@ public class Reader implements Runnable {
 	@Override
 	public void run() {
 		try {
+
 			Thread.currentThread().setName("Reader");
 			while(true) {
 				String command = stringIn.readLine();
@@ -52,10 +63,26 @@ public class Reader implements Runnable {
 			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			e.printStackTrace(); 
 		}
 		try {
 			stringIn.close();
+			Platform.runLater(
+					() -> {
+						Alert alert = new Alert(AlertType.ERROR);
+						alert.setTitle("Connection lost");
+						alert.setHeaderText("Connection lost");
+						alert.setContentText("Click OK to close the program");
+						alert.showAndWait();
+						Optional<ButtonType> result = alert.showAndWait();
+						if (result.get() == ButtonType.OK){
+							Database.close();
+							System.exit(0);
+						}
+					}
+					);
+
+
 			//objectIn.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -63,15 +90,15 @@ public class Reader implements Runnable {
 		}
 
 	}
-	
+
 	private void importMessageList() throws NumberFormatException, IOException {
-		
+
 		int messageListSize = Integer.parseInt(stringIn.readLine());
 		ArrayList<Message> messageList = new ArrayList<Message>(messageListSize);
 		System.out.println("messageListSize = "+messageListSize);
 		String sender, receiver, name, date, type;
 		StringBuilder content = new StringBuilder();
-		
+
 		String line = "";
 		while(messageList.size() != messageListSize) {
 			sender = stringIn.readLine();
@@ -83,25 +110,24 @@ public class Reader implements Runnable {
 				content.append(line+"\n");
 			if(content.length() > 0)
 				content.deleteCharAt(content.length() - 1); //delete the last '\n'
-			
+
 			type = stringIn.readLine();
 			messageList.add(new Message(sender, receiver, name, Long.parseLong(date), content.toString(), type));
 		}
 		Server.setMessageList(messageList);
 	}
+	
 	private void importContactList() throws IOException {
-		
-		
 		int contactListSize = Integer.parseInt(stringIn.readLine());
 		ArrayList<Contact> contactList = new ArrayList<Contact>(contactListSize);
 		String name, telNum;
-		
+
 		while(contactList.size() != contactListSize) {
 			name = stringIn.readLine();
 			telNum = stringIn.readLine();
 			contactList.add(new Contact(name, telNum));
 		}
-		
+
 		Server.setContactList(contactList);
 
 	}
@@ -112,59 +138,17 @@ public class Reader implements Runnable {
 			messageContentBuilder += line +"\n";
 		}
 		final String messageContent = messageContentBuilder.substring(0, messageContentBuilder.length() - 1);
-		
+
+		//executed on main thread
 		Platform.runLater(
-				  () -> {
-					  new MyController().displayMessage(messageFrom, messageContent);
-				  }
-				);
-		
-	/*	HomeWindow.newMessageIncoming(messageFrom, messageContent);
-		if(!HomeWindow.isActive()){
-			//Windows notification
-			if(SystemTray.isSupported()) {
-				SystemTray tray = SystemTray.getSystemTray();
-				Image image = Toolkit.getDefaultToolkit().createImage("icon.png");
-				TrayIcon trayIcon = new TrayIcon(image, "Tray Demo");
-				trayIcon.setImageAutoSize(true);
-				trayIcon.setToolTip("System tray icon demo");
-				trayIcon.addActionListener(new NewMessageIncomingAction(messageFrom, messageContent));
-				try {
-					tray.add(trayIcon);
-					trayIcon.displayMessage("New message from "+messageFrom, "Click to see", MessageType.INFO);
-				} catch (AWTException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-
+			() -> {
+				new MyController().displayMessage(messageFrom, messageContent);
+				if((!Main.isWindowFocused() || !ContactsManager.getInstance().isActiveContact(messageFrom)) && Sound.isAllowed()) 
+					Sound.play();
+				if(Main.isWindowMinimized() && WindowsNotification.isAllowed()) 
+					WindowsNotification.display(messageFrom);
 			}
-		}*/
-
+		);
 	}
-
-	public class NewMessageIncomingAction implements ActionListener {
-
-		private String messageFrom;
-		private String messageContent;
-
-		public NewMessageIncomingAction(String messageFrom, String messageContent) {
-			this.messageFrom = messageFrom;
-			this.messageContent = messageContent;
-		}
-
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			// BEG BDD PART
-			//      *
-			//      *
-			//		*
-			// END BDD PART
-
-			//	MainWindow.displayIncomingMessage(messageFrom,messageContent);
-
-		}
-
-	}
-
 
 }

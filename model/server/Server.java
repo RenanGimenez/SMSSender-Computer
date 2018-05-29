@@ -1,13 +1,29 @@
-package model;
+package model.server;
 
 import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+
+import javax.net.SocketFactory;
+import javax.net.ssl.SSLSocket;
+import javax.net.ssl.SSLSocketFactory;
 
 import javafx.scene.control.Button;
 import model.Contact;
+import model.Message;
+import model.database.Database;
 
 public class Server {
 	private static final int PORT = 10001;
@@ -23,19 +39,38 @@ public class Server {
 	}
 
 	public static void connectToPhone(String code) throws Exception {
+
+		ExecutorService service = Executors.newSingleThreadExecutor();
+
 		try {
-			socket = new Socket(codeToIP(code), PORT);
-			socket = Server.getSocket();	
+			Runnable r = new Runnable() {
+				@Override
+				public void run() {
+					try {
+						socket = new Socket(codeToIP(code), PORT);
 
-			in = socket.getInputStream();
-			new Thread(new Reader(in)).start();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			};
 
-			out = new PrintWriter(socket.getOutputStream());
-			System.out.println("successfully connected");
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new Exception("Impossible to connect to the phone!");
+			Future<?> f = service.submit(r);
+
+			f.get(2, TimeUnit.SECONDS);     // attempt the task for two minutes
 		}
+		catch (InterruptedException | TimeoutException e) {
+			System.err.println("Connection failed");
+			throw e;
+		}
+
+		in = socket.getInputStream();
+		new Thread(new Reader(in)).start();
+
+		out = new PrintWriter(socket.getOutputStream());
+		new Thread(new Ping(codeToIP(code))).start();
+		System.out.println("successfully connected");
 	}
 
 	public static Socket getSocket() {
@@ -89,7 +124,7 @@ public class Server {
 		return contactList;
 
 	}
-	
+
 	private static ArrayList<Message> sortByDate(ArrayList<Message> messageList) {
 		for(int i=0;i<messageList.size();i++) {
 			Message temp = (Message)messageList.get(i);
@@ -148,7 +183,7 @@ public class Server {
 		System.out.println("Sent to "+telNum + ": "+message);
 
 	}
-	
+
 	public static ArrayList<Message> getMessageList() {
 		synchronized (messageList){
 			while(messageList.isEmpty())
