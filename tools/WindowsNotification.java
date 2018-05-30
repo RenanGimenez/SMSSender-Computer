@@ -10,23 +10,13 @@ import java.awt.TrayIcon.MessageType;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import applications.Main;
 import controller.MyController;
-import main.Main;
 import model.ContactsManager;
 
 
 
 public class WindowsNotification {
-private static boolean allowed = true;
-	
-	
-	public static void setAllow(boolean allowed) {
-		WindowsNotification.allowed = allowed;
-	}
-	
-	public static boolean isAllowed() {
-		return WindowsNotification.allowed;
-	}
 	
 	public static void display(String messageFrom) {
 		SystemTray tray = SystemTray.getSystemTray();

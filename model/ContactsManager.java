@@ -17,6 +17,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import model.server.Server;
+import tools.Options;
 
 public class ContactsManager {
 	private static ContactsManager instance;
@@ -174,13 +175,11 @@ public class ContactsManager {
 	}
 
 	public Button getButtonOf(String messageFrom) {
-		System.out.println(messageFrom);
+		System.out.println("new Message from " + messageFrom);
 		Set<Button> keySet = viewMap.keySet();
 		for (Button b : keySet) {
-			System.out.println(b.getId());
-			if(b.getId().equals(messageFrom) || ("+33"+b.getId().substring(1)).equals(messageFrom)){
+			if(b.getId().equals(messageFrom) || (Options.getPrefixOfCountry()+b.getId()).substring(1).equals(messageFrom))
 				return b;
-			}
 		}
 		return null;
 	}

@@ -3,6 +3,8 @@ package model;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import tools.Options;
+
 public class Message {
     private String sender;
     private String receiver;
@@ -12,8 +14,16 @@ public class Message {
     private String type;
 
     public Message(String sender, String receiver, String name, Long date, String content, String type) {
-        this.sender = sender;
-        this.receiver = receiver;
+    	if(sender.startsWith("0"))
+    		this.sender = Options.getPrefixOfCountry() + sender.substring(1);
+    	else 
+    		this.sender = sender;
+    	
+    	if(receiver.startsWith("0"))
+    		this.receiver = Options.getPrefixOfCountry() + receiver.substring(1);
+    	else 
+    		this.receiver = receiver;
+
         this.name = name;
         this.date = date;
         this.content = content;

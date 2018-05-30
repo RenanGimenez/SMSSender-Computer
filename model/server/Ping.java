@@ -35,7 +35,6 @@ public class Ping implements Runnable {
 						alert.setTitle("Connection lost");
 						alert.setHeaderText("Connection lost");
 						alert.setContentText("Click OK to close the program");
-						alert.showAndWait();
 						Optional<ButtonType> result = alert.showAndWait();
 						if (result.get() == ButtonType.OK){
 						   System.exit(0);

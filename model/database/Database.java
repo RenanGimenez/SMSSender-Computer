@@ -69,7 +69,7 @@ public class Database {
 
 			stmt.close();
 		} catch ( Exception e ) {
-			System.err.println( e.getClass().getName() + ": " + e.getMessage() );
+			System.err.println( e.getClass().getName() + ": " + e.getMessage());
 		}
 	}
 	

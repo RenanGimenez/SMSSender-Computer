@@ -14,16 +14,17 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Optional;
 
+import applications.Main;
 import controller.MyController;
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
-import main.Main;
 import model.Contact;
 import model.ContactsManager;
 import model.Message;
 import model.database.Database;
+import tools.Options;
 import tools.Sound;
 import tools.WindowsNotification;
 
@@ -73,7 +74,6 @@ public class Reader implements Runnable {
 						alert.setTitle("Connection lost");
 						alert.setHeaderText("Connection lost");
 						alert.setContentText("Click OK to close the program");
-						alert.showAndWait();
 						Optional<ButtonType> result = alert.showAndWait();
 						if (result.get() == ButtonType.OK){
 							Database.close();
@@ -143,9 +143,9 @@ public class Reader implements Runnable {
 		Platform.runLater(
 			() -> {
 				new MyController().displayMessage(messageFrom, messageContent);
-				if((!Main.isWindowFocused() || !ContactsManager.getInstance().isActiveContact(messageFrom)) && Sound.isAllowed()) 
+				if((!Main.isWindowFocused() || !ContactsManager.getInstance().isActiveContact(messageFrom)) && Options.isSoundAllowed()) 
 					Sound.play();
-				if(Main.isWindowMinimized() && WindowsNotification.isAllowed()) 
+				if(Main.isWindowMinimized() && Options.isWindowsNotificationAllowed()) 
 					WindowsNotification.display(messageFrom);
 			}
 		);

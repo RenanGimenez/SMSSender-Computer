@@ -3,6 +3,8 @@ package model;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
+import tools.Options;
+
 
 public class Contact {
 	private static final String NAME_USER = "USER";
@@ -13,10 +15,10 @@ public class Contact {
 	
 	public Contact(String name, String telNum, ArrayList<Message> messages) {
 		this.name = name;
-		if(telNum.startsWith("+33"))
+		if(!telNum.startsWith("0"))
 			this.telNum = telNum;
 		else
-			this.telNum = "+33" + telNum.substring(1);
+			this.telNum = Options.getPrefixOfCountry() + telNum.substring(1);
 		this.messages = messages;
 		nbOldMessagesDisplayed = 0;
 	}

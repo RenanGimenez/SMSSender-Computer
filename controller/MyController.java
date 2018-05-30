@@ -26,14 +26,18 @@ import javafx.scene.layout.VBox;
 import java.awt.Color;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
-import main.Main;
+import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import model.Contact;
 import model.ContactsManager;
 import model.Message;
 import model.MessagesManager;
 import model.server.Server;
+import tools.Options;
+import javafx.application.Application;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 
 import java.io.IOException;
 import java.io.UTFDataFormatException;
@@ -47,9 +51,11 @@ import java.util.TimerTask;
 
 import javax.swing.border.LineBorder;
 
+import applications.Main;
+import applications.OptionsApp;
+
 public class MyController implements Initializable {
 
-	private static final int nbMessagesToDisplay = 20;
 	@FXML
 	private PasswordField passwordField;
 	@FXML
@@ -59,6 +65,9 @@ public class MyController implements Initializable {
 	@FXML
 	private VBox VBoxContacts;
 	private String TALKING_TO = "talkingTo";
+
+	@FXML
+	private Button optionsButton;
 	@Override
 	public void initialize(URL url, ResourceBundle resourceBundle) {
 
@@ -118,8 +127,8 @@ public class MyController implements Initializable {
 	public void connect(ActionEvent event) throws InterruptedException {
 
 		try {
-			
-			
+
+
 			String code = passwordField.getText();
 			System.out.println(code);
 			Server.connectToPhone(code);
@@ -138,14 +147,13 @@ public class MyController implements Initializable {
 	}
 	@FXML
 	public void displayOldMessages(ActionEvent event) throws InterruptedException{
-		System.out.println("Hi");
 		try {
 			ContactsManager contactsManager = ContactsManager.getInstance();
 			MessagesManager messagesManager = MessagesManager.getInstance();
 
 			VBox messagesVBox = ((VBox) contactsManager.getActiveScrollPane().getContent());
 			Contact contact = contactsManager.getContact(contactsManager.getActiveScrollPane());
-			ArrayList<Message> messages = contact.getOldMessages(contact.getNbOldMessages() - contact.getNbOldMessagesDisplayed() - nbMessagesToDisplay, //begin
+			ArrayList<Message> messages = contact.getOldMessages(contact.getNbOldMessages() - contact.getNbOldMessagesDisplayed() - Integer.parseInt(Options.getShowMessagesBy()), //begin
 					contact.getNbOldMessages() - contact.getNbOldMessagesDisplayed()); //end
 			for(int i=0; i<messages.size();++i) {
 				if(messages.get(i).getSender().equals("USER"))
@@ -153,9 +161,6 @@ public class MyController implements Initializable {
 				else
 					messagesVBox.getChildren().add(i+1,messagesManager.getMessageView(messages.get(i).getContent(),"received"));		
 			}
-			
-			System.out.println("Hi");
-
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -164,19 +169,21 @@ public class MyController implements Initializable {
 
 	public void displayMessage(String messageFrom, String messageContent) {
 		Button senderButton = ContactsManager.getInstance().getButtonOf(messageFrom);
+		System.out.println("Button id: "+senderButton.getId()+"  button text: "+senderButton.getText());
 		ScrollPane senderScrollPane = ContactsManager.getInstance().getScrollPaneOf(senderButton);
+		System.out.println("senderScrollPane id: "+senderScrollPane.getId());
 		VBox messagesVBox = ((VBox) senderScrollPane.getContent());
 		messagesVBox.getChildren().add(MessagesManager.getInstance().getMessageView(messageContent,"received"));
 		senderScrollPane.vvalueProperty().bind(messagesVBox.heightProperty());
 
 		ObservableList<String> styles = senderButton.getStyleClass();
-		
+
 		//test if the style newMessage exists
 		for (int i = 0; i < styles.size(); ++i)
 			if(styles.get(i).equals("newMessage")) {
 				return;
 			}
-		
+
 		// the style newMessage does not exist
 		styles.add("newMessage");
 
@@ -206,11 +213,47 @@ public class MyController implements Initializable {
 			}
 
 			((ScrollPane) ((Main) Main.getApplication()).getRoot().getLeft()).setVvalue(0);
-			
+
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 
+	@FXML
+	public void openOptionsWindow(ActionEvent event) throws InterruptedException{
+		Application optionsApp = new OptionsApp();
+		Stage stage = new Stage();
+
+		try {
+			optionsButton.setDisable(true);
+			optionsApp.start(stage);
+
+			stage.setOnCloseRequest((WindowEvent event1) -> {
+				optionsButton.setDisable(false);
+				try {
+					optionsApp.stop();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+			});
+
+			stage.setOnHidden((WindowEvent event1) -> {
+
+				optionsButton.setDisable(false);
+				try {
+					optionsApp.stop();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+			});
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 }
